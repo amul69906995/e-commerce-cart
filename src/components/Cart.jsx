@@ -15,7 +15,7 @@ const Cart = () => {
   return (
     <>
       <div style={{ marginTop: '100px', marginBottom: '100px' }}>
-      <ToastContainer/>
+      <ToastContainer position="top-center"/>
         {cart && cart.length > 0 ? (
           <>
          {cart.map(product => <CartItem key={product.id} {...product} />)}

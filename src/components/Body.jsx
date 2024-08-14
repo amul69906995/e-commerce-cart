@@ -31,7 +31,7 @@ const Body = () => {
   return (
     <>
       <div className="body">
-      <ToastContainer/>
+      <ToastContainer position="top-center"/>
        {products&&products.length>0&&products.map(product=><Card key={product.id} {...product}/>)}
       </div>
     </>
