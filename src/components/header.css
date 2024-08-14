@@ -1,0 +1,63 @@
+/* Header background and layout */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: linear-gradient(90deg, rgba(29,53,87,1) 0%, rgba(69,123,157,1) 100%);
+  }
+  
+  /* Logo styling */
+  .logo {
+    width: 50px;
+  }
+  
+  /* Navigation links layout */
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  
+  .nav-links li {
+    list-style: none;
+  }
+  
+  /* Link default style */
+  .nav-links a {
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+  }
+  
+  /* Active link style */
+  .active {
+    color: #ff9f1c;
+    border-bottom: 3px solid #ff9f1c;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Hover effect for links */
+  .nav-links a:hover {
+    color: #ff9f1c;
+  }
+  
+  /* Cart link and count */
+  .cart-link {
+    position: relative;
+  }
+  
+  .cart-count {
+    position: absolute;
+    top: -3px;
+    right: 3px;
+    background-color: #e63946;
+    color: #fff;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
