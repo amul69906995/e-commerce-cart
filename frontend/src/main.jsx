@@ -8,6 +8,7 @@ import ErrorPage from './components/ErrorPage'
 import NotFound from './components/NotFound';
 import './main.css'
 import { CartContext } from './context/CartContext';
+import CheckoutSuccess from './components/CheckoutSuccess.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path:'cart',
         element: <Cart/>,
+      },
+      {
+        path:'checkout',
+        element: <CheckoutSuccess/>,
       },
     ]
   },
