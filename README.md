@@ -5,7 +5,7 @@
 
 This project is a React-based e-commerce application featuring a cart system, product listing, and detailed item management. 
 
-![wireFrame](src/assets/workflow.png)
+![wireFrame](/frontend/src/assets/workflow.png)
 
 ## Features
 
