@@ -36,7 +36,7 @@ const coupon = [
   { discountCoupon: "10OFF", couponId: "10" },
   { discountCoupon: "20OFF", couponId: "gSEiFQ46" },
   { discountCoupon: "30OFF", couponId: "GLYjerLy" },
-  { discountCoupon: "40OFF", couponId: "pN9y5cyj" },
+  { discountCoupon: "40OFF", couponId: "rJuFG6m8" },
   // { discountCoupon: "50OFF", couponId:"pN9y5cyj"}
 ]
 //stri50
@@ -63,8 +63,9 @@ app.post('/checkout', async (req, res) => {
     //console.log(`${process.env.FRONTEND_URL}/checkout?success=true`)
     //console.log('Line Items:', JSON.stringify(line_items, null, 2));
     //find coupon based on discountCoupan from frontend if discount is there
+    let couponMatch;
     if (discountCoupan) {
-      const couponMatch = coupon.find(item => item.discountCoupon === discountCoupan);
+       couponMatch = coupon.find(item => item.discountCoupon === discountCoupan);
       if (!couponMatch) {
         return res.status(400).json({ error: 'Invalid Coupon' })
       }
