@@ -54,7 +54,7 @@ const Cart = () => {
               <CuponCode discountCode={discountCode} setDiscountCode={setDiscountCode} setDiscountedAmount={setDiscountedAmount} applyDiscount={applyDiscount}/>
 
              <PriceDisplay amount={amount} discountedAmount={discountedAmount}/>
-              <Checkout/>
+              <Checkout discountCode={discountCode}/>
             </div>
 
           </>

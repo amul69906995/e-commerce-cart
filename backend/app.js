@@ -31,13 +31,20 @@ app.use(cors({
 app.get('/', (req, res) => {
   res.send('hello world')
 })
-
-//stripe
+//stripe coupan code and id matching
+const coupon = [
+  { discountCoupon: "10OFF", couponId: "10" },
+  { discountCoupon: "20OFF", couponId: "gSEiFQ46" },
+  { discountCoupon: "30OFF", couponId: "GLYjerLy" },
+  { discountCoupon: "40OFF", couponId: "pN9y5cyj" },
+  // { discountCoupon: "50OFF", couponId:"pN9y5cyj"}
+]
+//stri50
 //start
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 app.post('/checkout', async (req, res) => {
-  const { cartItems } = req.body;
-  console.log(cartItems)
+  const { cartItems, discountCoupan } = req.body;
+  console.log(cartItems, "discountcoupan", discountCoupan);
   try {
     let line_items = cartItems.map(item => (
       {
@@ -55,15 +62,23 @@ app.post('/checkout', async (req, res) => {
     ))
     //console.log(`${process.env.FRONTEND_URL}/checkout?success=true`)
     //console.log('Line Items:', JSON.stringify(line_items, null, 2));
+    //find coupon based on discountCoupan from frontend if discount is there
+    if (discountCoupan) {
+      const couponMatch = coupon.find(item => item.discountCoupon === discountCoupan);
+      if (!couponMatch) {
+        return res.status(400).json({ error: 'Invalid Coupon' })
+      }
+    }
     const session = await stripe.checkout.sessions.create({
       line_items: line_items,
+      ...(discountCoupan ? { discounts: [{ coupon: couponMatch.couponId }] } : {}),
       mode: "payment",
       success_url: `${process.env.FRONTEND_URL}/checkout?success=true`,
       cancel_url: `${process.env.FRONTEND_URL}/checkout?success=false`,
     })
-   
+
     // console.log(session.id)
-     res.json({ sessionId: session.id,sessionUrl:session.url })
+    res.json({ sessionId: session.id, sessionUrl: session.url })
   } catch (error) {
     console.log(error)
   }
