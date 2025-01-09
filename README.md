@@ -32,7 +32,7 @@ To get started, clone the repository and install the dependencies using npm or y
 ## Features Needed
 - Create an admin panel to add/remove any product.
 - Authentication and authorization.
-- Crypto payment integration.
+- Crypto payment integration.{done using coinbase commerce charge api}
 - A dedicated page about each product.
 - Search for a product.
 
