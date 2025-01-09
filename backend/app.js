@@ -140,7 +140,7 @@ app.post('/crypto-checkout-verify', async (req, res) => {
 
   try {
     // Verify the webhook signature
-    const hmac = crypto.createHmac('sha256', SHARED_SECRET);
+    const hmac = crypto.createHmac('sha256', process.env.COINBASE_WEBHOOK_SECRET);
     hmac.update(payload, 'utf8');
     const computedSignature = hmac.digest('hex');
 
