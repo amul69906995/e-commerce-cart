@@ -1,5 +1,6 @@
 const express = require('express')
-const app = express()
+const app = express();
+const crypto = require('crypto');
 require('dotenv').config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -132,12 +133,48 @@ app.post('/crypto-checkout',async(req, res) => {
   }
 })
 
+//verify the charge status using coinbase webhook
+app.post('/crypto-checkout-verify', async (req, res) => {
+  const signature = req.headers['x-cc-webhook-signature'];
+  const payload = JSON.stringify(req.body);
 
+  try {
+    // Verify the webhook signature
+    const hmac = crypto.createHmac('sha256', SHARED_SECRET);
+    hmac.update(payload, 'utf8');
+    const computedSignature = hmac.digest('hex');
 
+    if (computedSignature !== signature) {
+      console.error('Invalid webhook signature');
+      return res.status(400).send('Invalid signature');
+    }
 
+    console.log('Webhook verified successfully',signature,req.body);
 
+    // Process the webhook event
+    const event = req.body;
 
+    if (event.type === 'charge:confirmed') {
+      console.log(`Charge confirmed: ${event.data.id}`);
+      
+      // // Fetch the charge details (optional, but recommended for extra verification)
+      // const chargeDetails = await getChargeDetails(event.data.id);
+      // console.log('Charge details:', chargeDetails);
 
+      // Update your database or system with successful payment status
+      res.status(200).send('Payment confirmed');
+    } else if (event.type === 'charge:failed') {
+      console.log(`Charge failed: ${event.data.id}`);
+      res.status(200).send('Payment failed');
+    } else {
+      res.status(200).send('Event received');
+    }
+  } catch (error) {
+    console.error('Error processing webhook:', error.message);
+    res.status(500).send('Internal server error');
+  }
+  //u can also use  socket or long polling to notify frontend about payment status
+});
 
 
 //end
