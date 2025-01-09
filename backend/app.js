@@ -65,7 +65,7 @@ app.post('/checkout', async (req, res) => {
     //find coupon based on discountCoupan from frontend if discount is there
     let couponMatch;
     if (discountCoupan) {
-       couponMatch = coupon.find(item => item.discountCoupon === discountCoupan);
+      couponMatch = coupon.find(item => item.discountCoupon === discountCoupan);
       if (!couponMatch) {
         return res.status(400).json({ error: 'Invalid Coupon' })
       }
@@ -85,7 +85,52 @@ app.post('/checkout', async (req, res) => {
   }
 })
 
+//pay with crypto
+app.post('/crypto-checkout',async(req, res) => {
+  const { cartItems, discountCoupan } = req.body;
+  console.log(cartItems, "discountcoupan", discountCoupan);
+  try {
+    let totalPrice = cartItems.reduce((acc, curr) => acc + (curr.qty) * (curr.price), 0).toFixed(2);
+    let couponMatch;
+    if (discountCoupan) {
+      couponMatch = coupon.find(item => item.discountCoupon === discountCoupan);
+      if (!couponMatch) {
+        return res.status(400).json({ error: 'Invalid Coupon' })
+      }
+      const discountString = couponMatch.discountCoupon.slice(0, -3); // Remove the last 3 characters (e.g., "OFF")
+      const discountPercentage = parseInt(discountString, 10); // Convert the string to an integer
 
+      // Apply the discount to the total price
+      const discountAmount = (totalPrice * discountPercentage) / 100;
+      totalPrice = totalPrice - discountAmount;
+
+      console.log(`Applied ${discountPercentage}% discount: -${discountAmount}`);
+    }
+    console.log("total price after discount", totalPrice)
+    const coinbaseCheckoutUrl = "https://api.commerce.coinbase.com/charges"
+    const headers = {
+      "Content-Type": "application/json",
+      "X-CC-Api-Key": `${process.env.COINBASE_API_SECRET}`,
+    };
+    const body = {
+      "local_price": {
+        "amount": totalPrice,
+        "currency": "INR"
+      },
+      "pricing_type": "fixed"
+    }
+    const response = await fetch(coinbaseCheckoutUrl, {
+      method:"POST",
+      headers: headers,
+      body: JSON.stringify(body)
+      })
+      const paymentRequest = await response.json();
+      console.log(paymentRequest.data.hosted_url)
+      res.json({url:paymentRequest.data.hosted_url});
+  } catch (error) {
+    console.log("error in crypto checkout controller")
+  }
+})
 
 
 

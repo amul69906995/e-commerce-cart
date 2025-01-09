@@ -1,36 +1,30 @@
-import { useContext, useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import { useContext, useState } from 'react'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { cartItemContext } from '../context/CartContext';
 import axios from 'axios';
-
-const Checkout = ({ discountCode }) => {
+const CryptoCheckout = ({ discountCode }) => {
     const { cart } = useContext(cartItemContext);
-    const [isLoading, setIsLoading] = useState(false);
-
+    const [isLoading,setIsLoading]=useState(false);
     const handleCheckout = async () => {
-        const stripe = await loadStripe(`${import.meta.env.VITE_STRIPE_PUBLICK_KEY}`);
+        console.log("handle crypto checkout",cart,discountCode);
         try {
             setIsLoading(true);
-            const { data } = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/checkout`,
-                { cartItems: cart, discountCoupan: discountCode || null }
-            );
-            console.log(data);
-            const result = await stripe.redirectToCheckout({
-                sessionId: data.sessionId,
-            });
-            console.log("result from stripe", result);
-        } catch (err) {
-            console.log(err.response?.data?.error || err.message);
-            toast.error(err.response?.data?.error || "An error occurred during checkout");
-        } finally {
+        const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/crypto-checkout`, { cartItems: cart ,discountCoupan:discountCode?discountCode:null})
+        console.log("crypto return data",data.url);
+        if(data.url){
+            //window.location.href = data.url;
+            window.open(data.url, '_blank');
+        }
+        } catch (error) {
+            console.log(error)
+        }finally{
             setIsLoading(false);
         }
-    };
-
+        
+    }
     return (
+        <>
         <>
             <button
                 style={{
@@ -41,7 +35,6 @@ const Checkout = ({ discountCode }) => {
                     justifyContent: 'center',
                     border: 'none',
                     borderRadius: '5px',
-                    marginRight: '10px',
                     cursor: isLoading ? 'not-allowed' : 'pointer',
                 }}
                 disabled={isLoading}
@@ -59,7 +52,7 @@ const Checkout = ({ discountCode }) => {
                         }}
                     ></div>
                 ) : (
-                    "Stripe Checkout"
+                    "Crypto Checkout"
                 )}
             </button>
 
@@ -73,8 +66,8 @@ const Checkout = ({ discountCode }) => {
                 `}
             </style>
         </>
-    );
-};
+        </>
+    )
+}
 
-export default Checkout;
-
+export default CryptoCheckout;

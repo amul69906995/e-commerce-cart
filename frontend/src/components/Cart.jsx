@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import  { useContext, useEffect, useState } from 'react'
 import { cartItemContext } from '../context/CartContext';
 import CartItem from './CartItem.jsx';
 import { ToastContainer } from 'react-toastify';
 import CuponCode from './CuponCode.jsx'
 import PriceDisplay from './PriceDisplay.jsx';
 import Checkout from './Checkout.jsx';
+import CryptoCheckout from './CryptoCheckout.jsx';
 
 
 const coupons = [
@@ -55,6 +56,7 @@ const Cart = () => {
 
              <PriceDisplay amount={amount} discountedAmount={discountedAmount}/>
               <Checkout discountCode={discountCode}/>
+              <CryptoCheckout discountCode={discountCode}/>
             </div>
 
           </>
